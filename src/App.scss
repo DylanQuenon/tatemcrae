@@ -1,6 +1,47 @@
-.slide{
-  width: 100%;
-  min-height: 100vh;
-  background-color: #051E42;
-  padding:96px 0
+/* Toastify Custom Theme */
+
+.Toastify__toast {
+    background: var(--color-secondary);
+    color: white;
+    border: 1px solid rgba(147, 197, 253, 0.25);
+    border-radius: 16px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+
+.Toastify__toast-body {
+    padding: 8px;
+}
+
+
+/* Success */
+.Toastify__toast--success {
+    background: var(--color-secondary);
+}
+
+
+/* Error */
+.Toastify__toast--error {
+    background: var(--color-secondary);
+    border-color: rgba(248, 113, 113, 0.4);
+}
+
+
+/* Progress bar */
+.Toastify__progress-bar {
+    background: #60a5fa;
+}
+
+
+/* Close button */
+.Toastify__close-button {
+    color: white;
+    opacity: 0.6;
+}
+
+.Toastify__close-button:hover {
+    opacity: 1;
 }

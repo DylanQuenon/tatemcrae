@@ -2,8 +2,10 @@
 const HomePage = () => {
   return (
     <>
-      <div class="text-primary">
-        Hey hey Everybody
+      <div className="text-primary py-24">
+        <div className="mx-auto max-w-7xl px-6">
+          Hey hey Everybody
+        </div>
       </div>
     </>
   )

@@ -1,18 +1,31 @@
 import { Outlet } from 'react-router-dom'
 import './App.scss'
-import Navbar from './components/Navbar/Navbar'
+import authAPI from './services/authAPI'
+import AuthContext from './contexts/AuthContext';
+import { useState } from 'react'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
+
+authAPI.setup()
 function App() {
+    const [isAuthenticated, setIsAuthenticated] = useState(authAPI.isAuthenticated())
+
+  // on donne les infos à la forme de notre contexte
+  const contextValue = {
+    isAuthenticated: isAuthenticated,
+    setIsAuthenticated: setIsAuthenticated
+  }
+
+ 
+
   return (
-      <>
-        <div className="slide font-unison text-primary">
-          {/* Header Layout*/}
-          <Navbar /> 
-           {/* Page Layout*/}
-          <main className="main-content">
-            <Outlet /> 
-          </main>
-        </div>
-      </>
+      <AuthContext.Provider value={contextValue}>
+        <Outlet /> 
+        <ToastContainer 
+          position="bottom-right"
+          pauseOnHover
+        />         
+      </AuthContext.Provider>
   )
 }
 

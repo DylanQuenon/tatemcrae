@@ -45,14 +45,40 @@
   }
 }
 
-
-body {
-  width: 100%;
-  min-height: 100%;
+.Toastify__toast {
+    font-family: "Unison Pro", sans-serif !important;
+    background: #051E42 !important;
+    color: white !important;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px !important;
+    padding-top:10px !important;
+    padding-bottom:10px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    box-shadow: 0 20px 40px rgba(5,30,66,0.4);
+    svg{
+        fill: var(--color-primary) !important;
+      
+    }
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+
+.Toastify__toast-icon {
+    color: white !important;
+}
+
+
+.Toastify__progress-bar {
+    background: var(--color-primary) !important;
+}
+
+
+.Toastify__close-button {
+    color: white !important;
+    opacity: 0.7;
+}
+
+
+.Toastify__close-button:hover {
+    opacity: 1;
 }
