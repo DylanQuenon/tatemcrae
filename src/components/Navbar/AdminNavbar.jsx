@@ -1,12 +1,14 @@
 // src/components/navbar/AdminNavbar.jsx
 
 import { NavLink, useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 import authAPI from "../../services/authAPI";
 import AuthContext from "../../contexts/AuthContext";
 
 const AdminNavbar = () => {
+    const [isOpen, setIsOpen] = useState(false);
+
     const links = [
         { name: "Dashboard", path: "/admin" },
         { name: "Home", path: "/" },
@@ -27,6 +29,7 @@ const AdminNavbar = () => {
 
             <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
+
                 {/* Branding */}
                 <NavLink
                     to="/admin"
@@ -45,8 +48,9 @@ const AdminNavbar = () => {
                 </NavLink>
 
 
-                {/* Navigation */}
-                <div className="flex items-center gap-8">
+
+                {/* Desktop Navigation */}
+                <div className="hidden items-center gap-8 md:flex">
 
                     <ul className="flex items-center gap-8">
 
@@ -73,11 +77,9 @@ const AdminNavbar = () => {
                     </ul>
 
 
-                    {/* Separator */}
                     <div className="h-6 w-px bg-blue-700/50" />
 
 
-                    {/* Logout */}
                     <button
                         onClick={handleLogout}
                         className="cursor-pointer rounded-lg border border-blue-700/50 bg-blue-900/20 px-4 py-2 text-sm font-medium text-blue-100 transition-all duration-300 hover:border-blue-400/50 hover:bg-blue-800/40 hover:text-white"
@@ -87,7 +89,61 @@ const AdminNavbar = () => {
 
                 </div>
 
+
+
+                {/* Burger */}
+                <button
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="cursor-pointer flex flex-col gap-1.5 md:hidden"
+                >
+                    <span className="h-0.5 w-6 bg-white"></span>
+                    <span className="h-0.5 w-6 bg-white"></span>
+                    <span className="h-0.5 w-6 bg-white"></span>
+                </button>
+
             </div>
+
+
+
+            {/* Mobile Menu */}
+            {isOpen && (
+                <div className="border-t border-blue-800/50 bg-secondary/95 px-6 py-6 backdrop-blur-xl md:hidden">
+
+                    <ul className="flex flex-col gap-5">
+
+                        {links.map((link) => (
+                            <li key={link.path}>
+
+                                <NavLink
+                                    to={link.path}
+                                    end={link.path === "/admin"}
+                                    onClick={() => setIsOpen(false)}
+                                    className={({ isActive }) =>
+                                        isActive
+                                            ? "text-white"
+                                            : "text-blue-100/60 hover:text-white"
+                                    }
+                                >
+                                    {link.name}
+                                </NavLink>
+
+                            </li>
+                        ))}
+
+
+                        <li>
+                            <button
+                                onClick={handleLogout}
+                                className="cursor-pointer rounded-lg border border-blue-700/50 bg-blue-900/20 px-4 py-2 text-sm font-medium text-blue-100"
+                            >
+                                Logout
+                            </button>
+                        </li>
+
+                    </ul>
+
+                </div>
+            )}
 
         </nav>
     );
