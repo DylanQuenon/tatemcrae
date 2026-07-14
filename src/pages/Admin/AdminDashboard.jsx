@@ -1,4 +1,10 @@
+import { useEffect } from 'react';
+
 export default function AdminDashboard() {
+    useEffect(() => {
+    document.title = "Admin Dashboard - Tate McRae";
+  }, []);
+    
     return (
         <div className="min-h-screen bg-secondary px-6 py-20 text-white md:px-12">
 

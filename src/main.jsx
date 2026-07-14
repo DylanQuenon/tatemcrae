@@ -33,7 +33,8 @@ const router = createBrowserRouter([
           },
           {
             path: "/news",
-            element: <NewsPage /> 
+            element: <NewsPage /> ,
+            
           }
         ]
       },

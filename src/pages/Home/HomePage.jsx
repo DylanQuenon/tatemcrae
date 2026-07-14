@@ -1,5 +1,8 @@
-
+import { useEffect } from 'react';
 const HomePage = () => {
+  useEffect(() => {
+    document.title = "Tate McRae | Home";
+  })
   return (
     <>
       <div className="text-primary py-24">
