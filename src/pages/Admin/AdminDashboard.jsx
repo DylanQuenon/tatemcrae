@@ -7,6 +7,7 @@ export default function AdminDashboard() {
     
     return (
         <div className="min-h-screen bg-secondary px-6 py-20 text-white md:px-12">
+            
 
             <div className="mx-auto flex max-w-7xl flex-col gap-10">
 

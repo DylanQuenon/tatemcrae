@@ -7,10 +7,14 @@ import { toast } from "react-toastify";
 import authAPI from "../../services/authAPI";
 import Field from "../../components/forms/Field";
 import AuthContext from "../../contexts/AuthContext";
+import AudioLoader from "../../components/loaders/AudioLoader";
 
 
 const LoginPage = () => {
     const navigate = useNavigate();
+
+    // loader
+    const [loading, setLoading] = useState(false);
 
     const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
 
@@ -38,6 +42,8 @@ const LoginPage = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        setLoading(true);
+
         try {
             await authAPI.authenticate(credentials);
 
@@ -50,6 +56,9 @@ const LoginPage = () => {
 
         } catch {
             setError("Invalid email address or password.");
+        }
+        finally{
+            setLoading(false);
         }
     };
 
@@ -97,8 +106,15 @@ const LoginPage = () => {
                         placeholder="••••••••"
                     />
 
-                    <button type="submit" className="mt-2 flex h-12 w-full cursor-pointer items-center justify-center rounded-xl border border-blue-400/30 bg-blue-800/50 font-semibold text-white transition-all duration-300 hover:bg-blue-700/60 hover:shadow-lg hover:shadow-blue-900/40 active:scale-[0.98]">
-                        Sign in
+                    <button type="submit" disabled={loading} className="mt-2 flex h-12 w-full cursor-pointer items-center justify-center rounded-xl border border-blue-400/30 bg-blue-800/50 font-semibold text-white transition-all duration-300 hover:bg-blue-700/60 hover:shadow-lg hover:shadow-blue-900/40 active:scale-[0.98]">
+                        {loading ? (
+                            <div className="flex gap-2">
+                                <span>Loading...</span>
+                                <AudioLoader height={20} width={20} />
+                            </div>
+                        ) : (
+                            <span>Sign in</span>
+                        )}
                     </button>
                 </form>
 
