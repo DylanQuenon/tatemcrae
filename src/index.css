@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: "Unison Pro";
-  src: url("./assets/fonts/UnisonPro/Type Juice - Unison Pro Light.otf") format("opentype");
+  src: url("./assets/fonts/UnisonPro/Type Juice - Unison Pro Light Round.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
 }
@@ -42,6 +42,9 @@
 @layer components {
   .text-body {
     @apply font-unison text-base text-primary;
+  }
+  .text-nav {
+    @apply font-unison text-lg text-primary;
   }
 }
 

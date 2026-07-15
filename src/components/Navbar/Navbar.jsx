@@ -1,48 +1,114 @@
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const links = [
     { name: "Home", path: "/" },
     { name: "News", path: "/news" },
+    { name: "Gallery", path: "/gallery" },
+    { name: "Merch", path: "https://tatemcrae.store/", isExternal: true },
   ];
 
-  return (
-    <nav className="fixed top-0 left-0 w-full z-50 text-white backdrop-blur-md border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <NavLink 
-          to="/" 
-          className="text-2xl font-bold text-white tracking-wide"
-        >
-          My<span className="text-purple-500">Gallery</span>
-        </NavLink>
+  // styling links
+  const linkStyles = ({ isActive }) =>
+    `rounded-full px-4 text-center py-2 transition-all duration-300 hover:bg-primary/20 border hover:border-primary/20 ${
+      isActive
+        ? "bg-primary text-secondary border-primary/20"
+        : "bg-transparent border-transparent"
+    }`;
 
-        <ul className="flex items-center gap-8">
+  // Shared classes for external links
+  const externalLinkStyles =
+    "rounded-full px-4 text-center py-2 transition-all duration-300 hover:bg-primary/20 border border-transparent hover:border-primary/20 bg-transparent";
+
+  return (
+    <div className="w-full flex justify-center text-primary text-md">
+      {/* Desktop Navbar */}
+      <nav className="max-md:hidden fixed top-5 py-6 px-6 flex justify-center rounded-full bg-[rgba(41,69,106,0.5)] border border-primary backdrop-blur-lg z-50">
+        <ul className="flex justify-center gap-4">
           {links.map((link) => (
-            <li key={link.path}>
-              <NavLink
-                to={link.path}
-                className={({ isActive }) =>
-                  `relative text-sm font-medium transition duration-300
-                  ${
-                    isActive
-                      ? "text-purple-400"
-                      : "text-gray-300 hover:text-white"
-                  }
-                  after:absolute after:left-0 after:-bottom-2 after:h-0.5 after:bg-purple-500 after:transition-all
-                  ${
-                    isActive
-                      ? "after:w-full"
-                      : "after:w-0 hover:after:w-full"
-                  }`
-                }
-              >
-                {link.name}
-              </NavLink>
+            <li key={link.name}>
+              {link.isExternal ? (
+                <a
+                  href={link.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={externalLinkStyles}
+                >
+                  {link.name}
+                </a>
+              ) : (
+                <NavLink to={link.path} className={linkStyles}>
+                  {link.name}
+                </NavLink>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/* Burger Button (Mobile) */}
+      <div className="flex justify-end">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="cursor-pointer fixed top-6 right-5 flex flex-col justify-center gap-3 md:hidden z-50 p-2"
+          aria-label="Toggle menu"
+        >
+        
+          <span
+            className={`h-[0.5px] w-10 bg-white transition-all duration-300 ease-in-out ${
+              isOpen ? "rotate-45 translate-y-[12.5px]" : ""
+            }`}
+          ></span>
+          <span
+            className={`h-[0.5px] w-10 bg-white transition-all duration-300 ease-in-out ${
+              isOpen ? "opacity-0 scale-x-0" : ""
+            }`}
+          ></span>
+          <span
+            className={`h-[0.5px] w-10 bg-white transition-all duration-300 ease-in-out ${
+              isOpen ? "-rotate-45 -translate-y-[12.5px]" : ""
+            }`}
+          ></span>
+        </button>
+      </div>
+
+      {/* 3. Mobile Menu Overlay) */}
+      <div
+        className={`fixed inset-0 bg-secondary/30 border-l border-primary/10 backdrop-blur-xl flex flex-col items-center justify-center transition-all duration-500 z-40 md:hidden ${
+          isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
+        }`}
+      >
+   
+        <ul className="flex flex-col gap-6 w-3/4 max-w-[260px]">
+          {links.map((link) => (
+            <li key={link.name} className="w-full">
+              {link.isExternal ? (
+                <a
+                  href={link.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setIsOpen(false)}
+                  className={`${externalLinkStyles} block text-lg py-3`}
+                >
+                  {link.name}
+                </a>
+              ) : (
+                <NavLink
+                  to={link.path}
+                  onClick={() => setIsOpen(false)}
+                  className={(navState) => `${linkStyles(navState)} block text-lg py-3`}
+                >
+                  {link.name}
+                </NavLink>
+              )}
             </li>
           ))}
         </ul>
       </div>
-    </nav>
+    </div>
   );
 };
 

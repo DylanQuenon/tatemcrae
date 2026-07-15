@@ -1,15 +1,17 @@
 import { useEffect } from 'react';
+import heroBackground from '../../assets/images/backgrounds/hero-background.webp'
 const HomePage = () => {
   useEffect(() => {
     document.title = "Tate McRae | Home";
   })
   return (
     <>
-      <div className="text-primary py-24">
-        <div className="mx-auto max-w-7xl px-6">
-          Hey hey Everybody
-        </div>
-      </div>
+   <div className="w-full min-h-screen py-24 bg-cover sm:bg-right lg:bg-center " style={{ backgroundImage: `url(${heroBackground})` }}>
+
+   </div>
+   <div className="w-full min-h-screen py-24 bg-cover bg-center " style={{ backgroundImage: `url(${heroBackground})` }}>
+
+   </div>
     </>
   )
 }
