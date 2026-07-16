@@ -18,27 +18,21 @@ const PublicLayout = () => {
                             key={location.pathname}
                             initial={{
                                 opacity: 0,
-                                y: -80,
-                                rotate: -10,
-                                scale: 0.8,
-                                filter: "blur(12px)",
+                                y: -40,
+                                rotate: -3,
                             }}
                             animate={{
                                 opacity: 1,
                                 y: 0,
                                 rotate: 0,
-                                scale: 1,
-                                filter: "blur(0px)",
                             }}
                             exit={{
                                 opacity: 0,
-                                y: 80,
-                                filter: "blur(12px)",
-                                rotate: 10,
-                                scale: 0.8,
+                                y: 40,
+                                rotate: 3,
                             }}
                             transition={{
-                                duration: 0.85,
+                                duration: 0.5,
                                 ease: [0.76, 0, 0.24, 1],
                             }}
                         >
