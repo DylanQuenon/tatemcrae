@@ -19,20 +19,26 @@ const PublicLayout = () => {
                             initial={{
                                 opacity: 0,
                                 y: -80,
+                                rotate: -10,
+                                scale: 0.8,
                                 filter: "blur(12px)",
                             }}
                             animate={{
                                 opacity: 1,
                                 y: 0,
+                                rotate: 0,
+                                scale: 1,
                                 filter: "blur(0px)",
                             }}
                             exit={{
                                 opacity: 0,
                                 y: 80,
                                 filter: "blur(12px)",
+                                rotate: 10,
+                                scale: 0.8,
                             }}
                             transition={{
-                                duration: 0.65,
+                                duration: 0.85,
                                 ease: [0.76, 0, 0.24, 1],
                             }}
                         >
