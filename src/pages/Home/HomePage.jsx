@@ -11,7 +11,7 @@ const HomePage = () => {
     <>
       {/* Hero Section */}
       <HomeHero/>
-      <div className=" -translate-y-[50%] z-10">
+      <div className=" translate-y-[-50%] z-10">
         <HomeMarquee/>
       </div>
     
