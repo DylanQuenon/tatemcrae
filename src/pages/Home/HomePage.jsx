@@ -9,8 +9,6 @@ const HomePage = () => {
     <>
       {/* Hero Section */}
       <HomeHero/>
-      <div className="w-full min-h-screen bg-secondary"></div>
- 
     </>
   )
 }

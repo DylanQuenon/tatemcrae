@@ -20,7 +20,9 @@ function App() {
 
   return (
       <AuthContext.Provider value={contextValue}>
-        <Outlet /> 
+        <div className="selection:bg-primary selection:text-secondary">
+          <Outlet /> 
+        </div>
         <ToastContainer 
           position="bottom-right"
           pauseOnHover
