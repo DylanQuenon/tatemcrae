@@ -86,7 +86,7 @@
     opacity: 1;
 }
 @theme {
-    --animate-marquee: marquee 35s linear infinite;
+    --animate-marquee: marquee 45s linear infinite;
 
     @keyframes marquee {
         from {

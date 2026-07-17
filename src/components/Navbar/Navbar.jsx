@@ -34,7 +34,7 @@ const Navbar = () => {
   return (
     <div className="w-full flex justify-center text-primary text-md">
       {/* Desktop Navbar */}
-      <nav className="max-md:hidden fixed top-5 py-6 px-6 flex justify-center rounded-full bg-[rgba(41,69,106,0.5)] border border-primary backdrop-blur-lg z-50">
+      <nav className="max-md:hidden z-[9999] fixed top-5 py-6 px-6 flex justify-center rounded-full bg-[rgba(41,69,106,0.5)] border border-primary backdrop-blur-lg z-50">
         <ul className="flex justify-center gap-4">
           {links.map((link) => (
             <li key={link.name}>

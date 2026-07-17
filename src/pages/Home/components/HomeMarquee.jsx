@@ -12,7 +12,7 @@ const HomeMarquee = () => {
     ];
 
     return (
-        <div className="w-full overflow-hidden">
+        <div className="w-full overflow-hidden relative">
             <div className="flex w-max animate-marquee items-center gap-8 max-md:text-2xl text-4xl font-bold text-white">
                 {[...items, ...items, ...items].map((item, index) => (
                     <div key={index} className="flex items-center gap-8 whitespace-nowrap">
