@@ -15,6 +15,8 @@ import AdminDashboard from './pages/Admin/AdminDashboard'
 import PrivateRoute from './components/PrivateRoute'
 import LoginPage from './pages/Login/LoginPage'
 import AuthLayout from './layouts/AuthLayout'
+import AdminTagsPage from './pages/Admin/Tags/AdminTagsPage'
+import AdminTagPage from './pages/Admin/Tags/AdminTagPage'
 
 
 const router = createBrowserRouter([
@@ -55,7 +57,9 @@ const router = createBrowserRouter([
           {
             element: <AdminLayout />, 
             children: [
-              { path: "/admin", element: <AdminDashboard /> } 
+              { path: "/admin", element: <AdminDashboard /> },
+              { path: "/admin/tags", element: <AdminTagsPage /> },
+              { path:"/admin/tags/:id", element: <AdminTagPage /> }
             ]
           }
         ]

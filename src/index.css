@@ -71,7 +71,7 @@
 
 
 .Toastify__progress-bar {
-    background: #051E42  !important;
+    background: var(--color-primary)  !important;
 }
 
 

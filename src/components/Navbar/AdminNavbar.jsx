@@ -11,7 +11,7 @@ const AdminNavbar = () => {
 
     const links = [
         { name: "Dashboard", path: "/admin" },
-        { name: "Home", path: "/" },
+        { name: "Tags", path: "/admin/tags" },
         { name: "News", path: "/news" },
     ];
 

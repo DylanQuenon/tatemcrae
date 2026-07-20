@@ -4,7 +4,7 @@ import AdminNavbar from "../components/Navbar/AdminNavbar";
 const AdminLayout = () => {
     return ( 
         <> 
-            <div className=" font-unison text-primary">
+            <div className="font-unison text-primary">
                 {/* Header Layout*/}
                 <AdminNavbar />
              
