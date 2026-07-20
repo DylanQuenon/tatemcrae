@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.4.0",
     "@tailwindcss/vite": "^4.3.2",
     "axios": "^1.18.1",
     "framer-motion": "^12.42.2",
@@ -18,11 +19,13 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-fast-marquee": "^1.6.5",
+    "react-hook-form": "^7.82.0",
     "react-loader-spinner": "^8.0.2",
     "react-loading-skeleton": "^3.5.0",
     "react-router-dom": "^7.18.1",
     "react-toastify": "^11.1.0",
-    "tailwindcss": "^4.3.2"
+    "tailwindcss": "^4.3.2",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

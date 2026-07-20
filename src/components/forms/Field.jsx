@@ -1,20 +1,17 @@
 // src/components/forms/Field.jsx
+import React from 'react';
 
-const Field = ({
+const Field = React.forwardRef(({
     name,
     label,
-    value,
-    onChange,
-    onBlur,
     placeholder = "",
     type = "text",
     error = "",
     rows = 4,
     ...rest
-}) => {
+}, ref) => {
     const isTextarea = type === "textarea";
 
-    // Style de base partagé entre input et textarea
     const inputStyles = `
         w-full
         rounded-xl
@@ -50,24 +47,20 @@ const Field = ({
 
     return (
         <div className="flex flex-col gap-2">
-            <label
-                htmlFor={name}
-                className="
-                    text-sm
-                    font-medium
-                    text-blue-100
-                "
-            >
-                {label}
-            </label>
+            {label && (
+                <label
+                    htmlFor={name}
+                    className="text-sm font-medium text-blue-100"
+                >
+                    {label}
+                </label>
+            )}
 
             {isTextarea ? (
                 <textarea
                     id={name}
                     name={name}
-                    value={value}
-                    onChange={onChange}
-                    onBlur={onBlur}
+                    ref={ref}
                     placeholder={placeholder || label}
                     rows={rows}
                     className={inputStyles}
@@ -77,10 +70,8 @@ const Field = ({
                 <input
                     id={name}
                     name={name}
+                    ref={ref}
                     type={type}
-                    value={value}
-                    onChange={onChange}
-                    onBlur={onBlur}
                     placeholder={placeholder || label}
                     className={inputStyles}
                     {...rest}
@@ -88,22 +79,15 @@ const Field = ({
             )}
 
             {error && (
-                <p className="
-                    flex
-                    items-center
-                    gap-2
-                    text-sm
-                    font-medium
-                    text-red-300
-                ">
-                    <span className="text-xs">
-                        ⚠
-                    </span>
+                <p className="flex items-center gap-2 text-sm font-medium text-red-300">
+                    <span className="text-xs">⚠</span>
                     {error}
                 </p>
             )}
         </div>
     );
-};
+});
+
+Field.displayName = "Field";
 
 export default Field;
