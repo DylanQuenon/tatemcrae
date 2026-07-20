@@ -53,7 +53,6 @@
     background: #051E42 !important;
     color: white !important;
     border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 16px !important;
     padding-top:10px !important;
     padding-bottom:10px !important;
     font-size: 12px !important;
@@ -72,7 +71,7 @@
 
 
 .Toastify__progress-bar {
-    background: var(--color-primary) !important;
+    background: #051E42  !important;
 }
 
 
@@ -84,6 +83,15 @@
 
 .Toastify__close-button:hover {
     opacity: 1;
+}
+.Toastify__toast--error {
+    background: #f9c0c0 !important;
+    color: #ef4444 !important;
+    border: 1px solid #ef4444 !important;
+}
+
+.Toastify__toast--error svg {
+    fill: #ef4444 !important;
 }
 @theme {
     --animate-marquee: marquee 45s linear infinite;
