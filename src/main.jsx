@@ -17,6 +17,8 @@ import LoginPage from './pages/Login/LoginPage'
 import AuthLayout from './layouts/AuthLayout'
 import AdminTagsPage from './pages/Admin/Tags/AdminTagsPage'
 import AdminTagPage from './pages/Admin/Tags/AdminTagPage'
+import AdminAlbumsPage from './pages/Admin/Albums/AdminAlbumsPage'
+import AdminAlbumPage from './pages/Admin/Albums/AdminAlbumPage'
 
 
 const router = createBrowserRouter([
@@ -59,7 +61,9 @@ const router = createBrowserRouter([
             children: [
               { path: "/admin", element: <AdminDashboard /> },
               { path: "/admin/tags", element: <AdminTagsPage /> },
-              { path:"/admin/tags/:id", element: <AdminTagPage /> }
+              { path:"/admin/tags/:id", element: <AdminTagPage /> },
+              { path:"/admin/albums/", element: <AdminAlbumsPage /> },
+              { path:"/admin/albums/:id", element: <AdminAlbumPage /> }
             ]
           }
         ]
