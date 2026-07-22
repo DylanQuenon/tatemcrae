@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Editor } from '@tinymce/tinymce-react';
 
 import Field from '../../../components/forms/Field';
 import newsAPI from '../../../services/newsAPI';
@@ -11,9 +12,14 @@ import mediaObjectsAPI from '../../../services/mediaObjectsAPI';
 import AudioLoader from '../../../components/loaders/AudioLoader';
 import { SERVER_URL } from '../../../config';
 
+// File validation constants
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
+// Custom font family for TinyMCE editor
+const YOUR_FONT_FAMILY = "Unison Pro, sans-serif"; 
+
+// Form validation schema powered by Zod
 const newSchema = z.object({
     title: z
         .string()
@@ -46,8 +52,11 @@ const newSchema = z.object({
 const AdminNewPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    
+    // Determine edit mode based on URL parameter
     const isEditing = Boolean(id && id !== "new");
 
+    // Local state for image preview and existing IRI
     const [coverPreview, setCoverPreview] = useState(null);
     const [existingCoverIri, setExistingCoverIri] = useState(null);
 
@@ -57,6 +66,7 @@ const AdminNewPage = () => {
         setError,
         reset,
         watch,
+        control,
         formState: { errors, isValid, isSubmitting, dirtyFields }
     } = useForm({
         resolver: zodResolver(newSchema),
@@ -69,16 +79,23 @@ const AdminNewPage = () => {
         }
     });
 
+    // Watch cover file input to handle live previews
     const watchCoverFile = watch("coverFile");
 
-    // Formate l'URL pour l'aperçu de l'image
+    /**
+     * Resolves the full URL for cover image preview.
+     * Handles local object URLs, absolute remote URLs, and relative backend paths.
+     */
     const getCoverUrl = (url) => {
         if (!url) return null;
         if (url.startsWith("http") || url.startsWith("blob:")) return url;
         return `${SERVER_URL}${url}`;
     };
 
-    // Chargement de la news en mode édition
+    /**
+     * Fetch existing news article data when in edit mode
+     * and hydrate form fields.
+     */
     useEffect(() => {
         if (!isEditing) return;
 
@@ -87,6 +104,7 @@ const AdminNewPage = () => {
                 const newsData = await newsAPI.find(id);
                 const { title, subtitle, content, cover } = newsData || {};
 
+                // Hydrate form inputs
                 reset({
                     title: title ?? "",
                     subtitle: subtitle ?? "",
@@ -94,6 +112,7 @@ const AdminNewPage = () => {
                     coverFile: null
                 });
 
+                // Extract cover reference IRI and URL if available
                 if (cover) {
                     const coverIri =
                         typeof cover === 'object'
@@ -116,7 +135,10 @@ const AdminNewPage = () => {
         loadNews();
     }, [id, isEditing, reset, navigate]);
 
-    // Aperçu dynamique de l'image sélectionnée
+    /**
+     * Generate local blob preview URL when a new image file is selected.
+     * Cleans up the URL object on unmount or file change to prevent memory leaks.
+     */
     useEffect(() => {
         if (watchCoverFile && watchCoverFile.length > 0) {
             const file = watchCoverFile[0];
@@ -128,12 +150,16 @@ const AdminNewPage = () => {
         }
     }, [watchCoverFile]);
 
-    // Soumission du formulaire
+    /**
+     * Handles form submission:
+     * 1. Uploads cover image to Media API (if selected).
+     * 2. Saves or updates the article via News API.
+     */
     const onSubmit = async (data) => {
         const selectedFile = data.coverFile && data.coverFile[0];
         let coverIri = existingCoverIri;
 
-        // 1. Upload du fichier image si modifié
+        // 1. Upload image if a new file was chosen
         if (selectedFile) {
             try {
                 const formData = new FormData();
@@ -147,6 +173,7 @@ const AdminNewPage = () => {
             } catch (mediaError) {
                 console.error("Error uploading image:", mediaError);
 
+                // Map API validation errors to React Hook Form fields
                 const violations = mediaError.response?.data?.violations;
 
                 if (violations && Array.isArray(violations)) {
@@ -169,7 +196,7 @@ const AdminNewPage = () => {
             }
         }
 
-        // 2. Préparation et envoi du payload (sans champ date inutile)
+        // 2. Create or update news article
         try {
             if (isEditing) {
                 const newsPayload = {
@@ -178,7 +205,7 @@ const AdminNewPage = () => {
                     cover: coverIri || null
                 };
 
-                // N'envoie 'title' QUE s'il a été changé au clavier
+                // Only send title if modified during editing
                 if (dirtyFields.title) {
                     newsPayload.title = data.title;
                 }
@@ -227,7 +254,7 @@ const AdminNewPage = () => {
 
     return (
         <div className="min-h-screen bg-secondary text-white px-6 py-10">
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-4xl mx-auto">
                 <div className="mb-10">
                     <span className="text-xs uppercase tracking-[0.3em] text-primary block">
                         Management
@@ -244,7 +271,7 @@ const AdminNewPage = () => {
                         className="space-y-8"
                         noValidate
                     >
-                        {/* Title */}
+                        {/* Title Input Field */}
                         <Field
                             label="TITLE *"
                             placeholder="ENTER NEWS TITLE..."
@@ -252,7 +279,7 @@ const AdminNewPage = () => {
                             error={errors.title?.message}
                         />
 
-                        {/* Subtitle */}
+                        {/* Subtitle Input Field */}
                         <Field
                             label="SUBTITLE *"
                             placeholder="ENTER NEWS SUBTITLE..."
@@ -260,17 +287,98 @@ const AdminNewPage = () => {
                             error={errors.subtitle?.message}
                         />
 
-                        {/* Content */}
-                        <Field
-                            label="CONTENT *"
-                            type="textarea"
-                            placeholder="ENTER NEWS CONTENT..."
-                            rows={6}
-                            {...register("content")}
-                            error={errors.content?.message}
-                        />
+                        {/* Rich Text Editor Field (TinyMCE) */}
+                        <div className="space-y-2">
+                            <label className="block text-xs uppercase tracking-[0.2em] text-primary font-medium">
+                                CONTENT *
+                            </label>
 
-                        {/* Cover Image */}
+                            <Controller
+                                name="content"
+                                control={control}
+                                render={({ field: { onChange, value } }) => (
+                                    <Editor
+                                        apiKey={import.meta.env.VITE_TINYMCE_API_KEY || "no-api-key"}
+                                        value={value}
+                                        onEditorChange={(content) => onChange(content)}
+                                        init={{
+                                            height: 480,
+                                            menubar: false,
+                                            skin: "oxide-dark",
+                                            content_css: "dark",
+                                            plugins: [
+                                                'advlist', 'autolink', 'lists', 'link', 'image',
+                                                'charmap', 'preview', 'anchor', 'searchreplace',
+                                                'visualblocks', 'code', 'fullscreen',
+                                                'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+                                            ],
+                                            toolbar: 'undo redo | blocks fontsizeinput | ' +
+                                                'bold italic backcolor | alignleft aligncenter ' +
+                                                'alignright alignjustify | bullist numlist outdent indent | ' +
+                                                'image link media | removeformat | help',
+                                            
+                                            // Handle inline image uploads in TinyMCE via Base64 encoding
+                                            image_title: true,
+                                            automatic_uploads: true,
+                                            file_picker_types: 'image',
+                                            images_upload_handler: (blobInfo) => new Promise((resolve) => {
+                                                resolve("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64());
+                                            }),
+
+                                            // Custom editor styles
+                                            content_style: `
+                                                body {
+                                                    font-family: ${YOUR_FONT_FAMILY};
+                                                    font-size: 15px;
+                                                    line-height: 1.6;
+                                                    background-color: #051e42;
+                                                    color: #ffffff;
+                                                    padding: 16px;
+                                                }
+                                                h1 {
+                                                    font-size: 2.2rem;
+                                                    font-weight: 700;
+                                                    margin-top: 1.2em;
+                                                    margin-bottom: 0.5em;
+                                                    color: #ffffff;
+                                                }
+                                                h2 {
+                                                    font-size: 1.75rem;
+                                                    font-weight: 600;
+                                                    margin-top: 1.2em;
+                                                    margin-bottom: 0.5em;
+                                                    color: #f1f5f9;
+                                                }
+                                                h3 {
+                                                    font-size: 1.35rem;
+                                                    font-weight: 600;
+                                                    margin-top: 1em;
+                                                    margin-bottom: 0.4em;
+                                                    color: #cbd5e1;
+                                                }
+                                                p {
+                                                    margin-bottom: 1em;
+                                                }
+                                                img {
+                                                    max-width: 100%;
+                                                    height: auto;
+                                                    border-radius: 4px;
+                                                    margin: 12px 0;
+                                                }
+                                            `
+                                        }}
+                                    />
+                                )}
+                            />
+
+                            {errors.content && (
+                                <p className="text-red-400 text-xs mt-1">
+                                    {errors.content.message}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Cover Image Field & Preview */}
                         <div className="space-y-3">
                             <label className="block text-xs uppercase tracking-[0.2em] text-primary font-medium">
                                 COVER IMAGE (MEDIA OBJECT)
@@ -329,7 +437,7 @@ const AdminNewPage = () => {
                             )}
                         </div>
 
-                        {/* Actions */}
+                        {/* Form Action Buttons */}
                         <div className="flex items-center gap-4 pt-4 border-t border-white/10">
                             <button
                                 type="submit"
