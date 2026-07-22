@@ -180,14 +180,18 @@ const AdminNewsPage = () => {
                                                     {article.title}
                                                 </span>
                                             </td>
+                                           {/* NOUVELLE VERSION AVEC TRONCATUR À 50 CARACTÈRES */}
                                             <td className="px-6 py-5">
-                                                <span className="uppercase text-sm tracking-wider font-medium text-white/90">
-                                                    {article.subtitle}
+                                                <span 
+                                                    className="uppercase text-sm tracking-wider font-medium text-white/90" 
+                                                    title={article.subtitle}
+                                                >
+                                                    {truncateText(article.subtitle, 10)}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-5 max-w-xs">
                                                 <p className="text-xs text-white/60 line-clamp-2" title={article.content}>
-                                                    {truncateText(article.content, 80)}
+                                                    {truncateText(article.content, 50)}
                                                 </p>
                                             </td>
     
@@ -257,14 +261,14 @@ const AdminNewsPage = () => {
                 )}
             </div>
             
-            <ConfirmModal
+             <ConfirmModal
                 isOpen={!!newToDelete}
                 title="Confirm deletion"
                 message={
                     <p>
-                        Are you sure you want to delete the NEW{" "}
+                        Are you sure you want to delete the album{" "}
                         <span className="text-primary font-semibold uppercase">
-                            "{setNewToDelete?.title}"
+                            "{newToDelete?.title}"
                         </span>
                         ? This action cannot be undone.
                     </p>

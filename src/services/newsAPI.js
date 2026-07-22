@@ -32,8 +32,12 @@ function deleteNews(id){
     return Axios.delete(`${NEWS_API}/${id}`);
 }
 
-function updateNews(id,news){
-    return Axios.put(`${NEWS_API}/${id}`, news);
+function updateNews(id, news) {
+    return Axios.patch(`${NEWS_API}/${id}`, news, {
+        headers: {
+            'Content-Type': 'application/merge-patch+json'
+        }
+    });
 }
 
 function createNews(news){
