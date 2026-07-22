@@ -20,6 +20,7 @@ import AdminTagPage from './pages/Admin/Tags/AdminTagPage'
 import AdminAlbumsPage from './pages/Admin/Albums/AdminAlbumsPage'
 import AdminAlbumPage from './pages/Admin/Albums/AdminAlbumPage'
 import AdminNewsPage from './pages/Admin/News/AdminNewsPage'
+import AdminNewPage from './pages/Admin/News/AdminNewPage'
 
 
 const router = createBrowserRouter([
@@ -65,7 +66,8 @@ const router = createBrowserRouter([
               { path:"/admin/tags/:id", element: <AdminTagPage /> },
               { path:"/admin/albums/", element: <AdminAlbumsPage /> },
               { path:"/admin/albums/:id", element: <AdminAlbumPage /> },
-              { path: "/admin/news/", element: <AdminNewsPage /> }
+              { path: "/admin/news/", element: <AdminNewsPage /> },
+              { path: "/admin/news/:id", element: <AdminNewPage /> }
             ]
           }
         ]
