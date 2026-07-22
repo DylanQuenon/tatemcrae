@@ -8,3 +8,4 @@ export const LOGIN_API = API_URL + "login_check";
 export const CONCERTS_API = API_URL + "concerts";
 export const TAGS_API = API_URL + "tags";
 export const ALBUMS_API = API_URL + "albums";
+export const NEWS_API = API_URL + "news";

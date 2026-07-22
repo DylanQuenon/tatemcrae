@@ -13,6 +13,7 @@ const AdminNavbar = () => {
         { name: "Dashboard", path: "/admin" },
         { name: "Tags", path: "/admin/tags" },
         { name: "Albums", path: "/admin/albums" },
+        { name: "News", path: "/admin/news" },
     ];
 
     const navigate = useNavigate();

@@ -109,9 +109,9 @@ const AdminAlbumsPage = () => {
                         <span className="text-xs uppercase tracking-[0.3em] text-primary block">
                             Management
                         </span>
-                        <h1 className="mt-2 text-4xl font-medium uppercase italic bg-tertiary bg-clip-text text-transparent">
+                        <h3 className="mt-2 text-4xl font-medium uppercase italic bg-tertiary bg-clip-text text-transparent">
                             Albums
-                        </h1>
+                        </h3>
                     </div>
 
                     <Link
