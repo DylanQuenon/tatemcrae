@@ -32,9 +32,13 @@ function updateTag(id, tag){
     return Axios.put(`${TAGS_API}/${id}`, tag)
 }
 
-function createTag(tag){
-    console.log(tag)
-    return Axios.post(TAGS_API, tag)
+function createTag(tag) {
+    console.log("Creating tag payload:", tag);
+    return Axios.post(TAGS_API, tag, {
+        headers: {
+            'Content-Type': 'application/ld+json'
+        }
+    }).then((response) => response.data);
 }
 
 export default {
