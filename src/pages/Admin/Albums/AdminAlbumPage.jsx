@@ -369,7 +369,7 @@ const AdminAlbumPage = () => {
                                 type="submit"
                                 disabled={isSubmitDisabled}
                                 className="
-                                    min-w-[160px] min-h-[44px]
+                                    min-w-40 min-h-11
                                     flex items-center justify-center gap-2
                                     px-8 py-3
                                     border border-primary
