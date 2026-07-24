@@ -1,3 +1,4 @@
+// src/pages/admin/AdminAlbumPage.jsx
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -6,7 +7,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import Field from '../../../components/forms/Field';
-import galleriesAPI from '../../../services/galleriesAPI';
+import AlbumsAPI from '../../../services/AlbumsAPI';
 import mediaObjectsAPI from '../../../services/mediaObjectsAPI';
 import AudioLoader from '../../../components/loaders/AudioLoader';
 import { SERVER_URL } from '../../../config';
@@ -14,14 +15,21 @@ import { SERVER_URL } from '../../../config';
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
-const gallerySchema = z.object({
-    title: z
+const albumSchema = z.object({
+    name: z
         .string()
-        .min(1, "Gallery title is required and can't be empty."),
+        .min(1, "Album name is required and can't be empty."),
+    releasedAt: z
+        .string()
+        .min(1, "Release date is required and can't be empty."),
     description: z
         .string()
-        .optional(),
-    imageFile: z
+        .min(1, "Description is required and can't be empty."),
+    streamUrl: z
+        .string()
+        .min(1, "Streaming URL is required and can't be empty.")
+        .url("Streaming URL must be a valid URL (e.g. https://...)"),
+    coverFile: z
         .any()
         .optional()
         .refine(
@@ -40,13 +48,13 @@ const gallerySchema = z.object({
         )
 });
 
-const AdminGalleryPage = () => {
+const AdminAlbumPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const isEditing = Boolean(id && id !== "new");
 
-    const [imagePreview, setImagePreview] = useState(null);
-    const [existingImageIri, setExistingImageIri] = useState(null);
+    const [coverPreview, setCoverPreview] = useState(null);
+    const [existingCoverIri, setExistingCoverIri] = useState(null);
 
     // Initialize React Hook Form with Zod validation.
     const {
@@ -57,93 +65,100 @@ const AdminGalleryPage = () => {
         watch,
         formState: { errors, isValid, isSubmitting }
     } = useForm({
-        resolver: zodResolver(gallerySchema),
+        resolver: zodResolver(albumSchema),
         mode: "onChange",
         defaultValues: {
-            title: "",
+            name: "",
+            releasedAt: "",
             description: "",
-            imageFile: null
+            streamUrl: "",
+            coverFile: null
         }
     });
 
-    const watchImageFile = watch("imageFile");
+    const watchCoverFile = watch("coverFile");
 
-    // Build the full URL used to display the image preview.
-    const getImageUrl = (url) => {
+    // Build the full URL used to display the cover preview.
+    const getCoverUrl = (url) => {
         if (!url) return null;
         if (url.startsWith("http") || url.startsWith("blob:")) return url;
         return `${SERVER_URL}${url}`;
     };
 
-    // Load the gallery data when editing an existing item.
+    // Load the album data when editing an existing album.
     useEffect(() => {
         if (!isEditing) return;
 
-        const loadGallery = async () => {
+        const loadAlbum = async () => {
             try {
-                const data = await galleriesAPI.find(id);
-                const { title, name, description, image, mediaObject } = data || {};
+                const data = await AlbumsAPI.find(id);
+                const { name, releasedAt, description, streamUrl, cover } = data || {};
 
-                // Handles both 'title' or 'name' property depending on your API structure
-                const galleryTitle = title || name || "";
+                let formattedDate = "";
 
+                if (releasedAt) {
+                    formattedDate = new Date(releasedAt)
+                        .toISOString()
+                        .split('T')[0];
+                }
+
+                // Populate the form with the existing album data.
                 reset({
-                    title: galleryTitle,
-                    description: description ?? ""
+                    name: name ?? "",
+                    releasedAt: formattedDate,
+                    description: description ?? "",
+                    streamUrl: streamUrl ?? ""
                 });
 
-                // Handles cover/image field structure from API Platform
-                const targetImage = image || mediaObject;
+                if (cover) {
+                    const coverIri =
+                        typeof cover === 'object'
+                            ? cover['@id'] || cover.contentUrl
+                            : cover;
 
-                if (targetImage) {
-                    const imageIri =
-                        typeof targetImage === 'object'
-                            ? targetImage['@id'] || targetImage.contentUrl
-                            : targetImage;
+                    setExistingCoverIri(coverIri);
 
-                    setExistingImageIri(imageIri);
-
-                    if (typeof targetImage === 'object' && targetImage.contentUrl) {
-                        setImagePreview(getImageUrl(targetImage.contentUrl));
+                    if (typeof cover === 'object' && cover.contentUrl) {
+                        setCoverPreview(getCoverUrl(cover.contentUrl));
                     }
                 }
             } catch (error) {
-                console.error("Error loading gallery item:", error);
-                toast.error("Unable to load gallery item");
-                navigate("/admin/galleries", { replace: true });
+                console.error("Error loading album:", error);
+                toast.error("Unable to load album");
+                navigate("/admin/albums", { replace: true });
             }
         };
 
-        loadGallery();
+        loadAlbum();
     }, [id, isEditing, reset, navigate]);
 
-    // Generate a temporary preview URL when a new image is selected.
+    // Generate a temporary preview URL when a new cover image is selected.
     useEffect(() => {
-        if (watchImageFile && watchImageFile.length > 0) {
-            const file = watchImageFile[0];
+        if (watchCoverFile && watchCoverFile.length > 0) {
+            const file = watchCoverFile[0];
             const objectUrl = URL.createObjectURL(file);
 
-            setImagePreview(objectUrl);
+            setCoverPreview(objectUrl);
 
             return () => URL.revokeObjectURL(objectUrl);
         }
-    }, [watchImageFile]);
+    }, [watchCoverFile]);
 
     // Handle form submission.
     const onSubmit = async (data) => {
-        const selectedFile = data.imageFile && data.imageFile[0];
+        // A cover image is required when creating a new album.
+        const selectedFile = data.coverFile && data.coverFile[0];
 
-        // An image is required when creating a new gallery item.
         if (!isEditing && !selectedFile) {
-            setError("imageFile", {
+            setError("coverFile", {
                 type: "manual",
-                message: "Gallery image is required and can't be empty."
+                message: "Album cover is required and can't be empty."
             });
 
             return;
         }
 
-        let imageIri = existingImageIri;
+        let coverIri = existingCoverIri;
 
         // Step 1: Upload the selected image as a MediaObject.
         if (selectedFile) {
@@ -153,7 +168,7 @@ const AdminGalleryPage = () => {
 
                 const mediaObject = await mediaObjectsAPI.create(formData);
 
-                imageIri =
+                coverIri =
                     mediaObject['@id'] ||
                     `/api/media_objects/${mediaObject.id}`;
             } catch (mediaError) {
@@ -165,13 +180,13 @@ const AdminGalleryPage = () => {
                     violations.forEach(({ propertyPath, message }) => {
                         setError(
                             propertyPath === 'file'
-                                ? 'imageFile'
+                                ? 'coverFile'
                                 : propertyPath,
                             { message }
                         );
                     });
                 } else {
-                    setError("imageFile", {
+                    setError("coverFile", {
                         message: "Failed to upload image to server."
                     });
                 }
@@ -181,34 +196,36 @@ const AdminGalleryPage = () => {
             }
         }
 
-        // Step 2: Send the gallery payload to API Platform.
+        // Step 2: Send the album data to the Symfony/API Platform API.
         try {
-            const galleryPayload = {
-                title: data.title,
+            const albumPayload = {
+                name: data.name,
+                releasedAt: data.releasedAt,
                 description: data.description,
-                image: imageIri
+                streamUrl: data.streamUrl,
+                cover: coverIri
             };
 
             if (isEditing) {
-                await galleriesAPI.update(id, galleryPayload);
-                toast.success("Gallery item updated successfully");
+                await AlbumsAPI.update(id, albumPayload);
+                toast.success("Album updated successfully");
             } else {
-                await galleriesAPI.create(galleryPayload);
-                toast.success("Gallery item created successfully");
+                await AlbumsAPI.create(albumPayload);
+                toast.success("Album created successfully");
             }
 
-            navigate("/admin/galleries", { replace: true });
-        } catch (galleryError) {
-            console.error("API Error Response:", galleryError.response);
+            navigate("/admin/albums", { replace: true });
+        } catch (albumError) {
+            console.error("API Error Response:", albumError.response);
 
             // Map API Platform 422 validation errors to React Hook Form fields.
-            const violations = galleryError.response?.data?.violations;
+            const violations = albumError.response?.data?.violations;
 
             if (violations && Array.isArray(violations)) {
                 violations.forEach(({ propertyPath, message }) => {
                     const fieldName =
-                        propertyPath === 'image'
-                            ? 'imageFile'
+                        propertyPath === 'cover'
+                            ? 'coverFile'
                             : propertyPath;
 
                     setError(fieldName, { message });
@@ -217,17 +234,17 @@ const AdminGalleryPage = () => {
                 toast.error("Please fix the errors in the form.");
             } else {
                 toast.error(
-                    galleryError.response?.data?.['hydra:description'] ||
-                    "An error occurred while saving the gallery item."
+                    albumError.response?.data?.['hydra:description'] ||
+                    "An error occurred while saving the album."
                 );
             }
         }
     };
 
-    // Disable submission when the form is invalid or no image is selected during creation.
+    // Disable submission when the form is invalid or no cover is selected during creation.
     const isFileMissingInCreate =
         !isEditing &&
-        (!watchImageFile || watchImageFile.length === 0);
+        (!watchCoverFile || watchCoverFile.length === 0);
 
     const isSubmitDisabled =
         isSubmitting ||
@@ -235,15 +252,15 @@ const AdminGalleryPage = () => {
         isFileMissingInCreate;
 
     return (
-        <div className="min-h-screen bg-secondary text-white px-6 py-10">
-            <div className="max-w-2xl mx-auto">
+        <div className="min-h-screen bg-secondary text-white px-6 py-24">
+            <div className="max-w-7xl mx-auto">
                 <div className="mb-10">
                     <span className="text-xs uppercase tracking-[0.3em] text-primary block">
                         Management
                     </span>
 
                     <h1 className="mt-2 text-4xl font-medium uppercase italic bg-tertiary bg-clip-text text-transparent">
-                        {!isEditing ? "Create Gallery Item" : "Edit Gallery Item"}
+                        {!isEditing ? "Create Album" : "Edit Album"}
                     </h1>
                 </div>
 
@@ -253,36 +270,52 @@ const AdminGalleryPage = () => {
                         className="space-y-8"
                         noValidate
                     >
-                        {/* Gallery Title */}
+                        {/* Album name */}
                         <Field
-                            label="TITLE *"
-                            placeholder="E.G. CONCERT PHOTO 2024..."
-                            {...register("title")}
-                            error={errors.title?.message}
+                            label="ALBUM NAME *"
+                            placeholder="E.G. DARK SIDE OF THE MOON..."
+                            {...register("name")}
+                            error={errors.name?.message}
                         />
 
-                        {/* Description */}
+                        {/* Release date */}
                         <Field
-                            label="DESCRIPTION"
+                            label="RELEASE DATE *"
+                            type="date"
+                            {...register("releasedAt")}
+                            error={errors.releasedAt?.message}
+                        />
+
+                        {/* Album description */}
+                        <Field
+                            label="DESCRIPTION *"
                             type="textarea"
-                            placeholder="ENTER GALLERY DESCRIPTION..."
+                            placeholder="ENTER ALBUM DESCRIPTION..."
                             rows={4}
                             {...register("description")}
                             error={errors.description?.message}
                         />
 
-                        {/* Gallery Image */}
+                        {/* Streaming URL */}
+                        <Field
+                            label="STREAMING URL *"
+                            placeholder="HTTPS://OPEN.SPOTIFY.COM/ALBUM/..."
+                            {...register("streamUrl")}
+                            error={errors.streamUrl?.message}
+                        />
+
+                        {/* Album cover image */}
                         <div className="space-y-3">
                             <label className="block text-xs uppercase tracking-[0.2em] text-primary font-medium">
-                                IMAGE (MEDIA OBJECT) *
+                                ALBUM COVER (MEDIA OBJECT) *
                             </label>
 
                             <div className="flex items-center gap-6">
-                                {imagePreview && (
+                                {coverPreview && (
                                     <div className="w-20 h-20 border border-white/20 overflow-hidden relative group shrink-0">
                                         <img
-                                            src={getImageUrl(imagePreview)}
-                                            alt="Preview"
+                                            src={getCoverUrl(coverPreview)}
+                                            alt="Cover preview"
                                             className="w-full h-full object-cover"
                                             onError={(e) => {
                                                 e.currentTarget.onerror = null;
@@ -297,7 +330,7 @@ const AdminGalleryPage = () => {
                                     className={`
                                         flex-1 flex flex-col items-center justify-center py-6 px-4
                                         border border-dashed
-                                        ${errors.imageFile
+                                        ${errors.coverFile
                                             ? 'border-red-500'
                                             : 'border-white/20'}
                                         hover:border-primary/60 transition-colors duration-300
@@ -305,8 +338,8 @@ const AdminGalleryPage = () => {
                                     `}
                                 >
                                     <span className="text-xs uppercase tracking-wider text-white/70">
-                                        {watchImageFile && watchImageFile[0]
-                                            ? watchImageFile[0].name
+                                        {watchCoverFile && watchCoverFile[0]
+                                            ? watchCoverFile[0].name
                                             : "Choose an image file..."}
                                     </span>
 
@@ -318,14 +351,14 @@ const AdminGalleryPage = () => {
                                         type="file"
                                         accept="image/png, image/jpeg, image/jpg, image/webp"
                                         className="hidden"
-                                        {...register("imageFile")}
+                                        {...register("coverFile")}
                                     />
                                 </label>
                             </div>
 
-                            {errors.imageFile && (
+                            {errors.coverFile && (
                                 <p className="text-red-400 text-xs mt-1">
-                                    {errors.imageFile.message}
+                                    {errors.coverFile.message}
                                 </p>
                             )}
                         </div>
@@ -361,14 +394,14 @@ const AdminGalleryPage = () => {
                                         </span>
                                     </>
                                 ) : isEditing ? (
-                                    "Update Item"
+                                    "Update Album"
                                 ) : (
-                                    "Save Item"
+                                    "Save Album"
                                 )}
                             </button>
 
                             <Link
-                                to="/admin/galleries"
+                                to="/admin/albums"
                                 className="
                                     px-6 py-3
                                     border border-white/20
@@ -387,4 +420,4 @@ const AdminGalleryPage = () => {
     );
 };
 
-export default AdminGalleryPage;
+export default AdminAlbumPage;

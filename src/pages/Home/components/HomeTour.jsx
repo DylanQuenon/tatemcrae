@@ -55,7 +55,7 @@ const HomeTour = () => {
 
                 {/* Tour Dates List Container */}
                 {!loading ? (
-                    <div className="flex flex-col flex-1">
+                    <div className="flex flex-col md:flex-1">
                         {concerts && concerts.length > 0 ? (
                             <>
                                 {/* List of Up to 5 Concerts */}
@@ -93,21 +93,21 @@ const HomeTour = () => {
                                                         ease: [0.22, 1, 0.36, 1],
                                                     },
                                                 }}
-                                                className="flex items-center w-full"
+                                                className="flex max-md:flex-col max-md:items-start md:items-center w-full gap-4 max-md:gap-3"
                                             >
                                                 {/* Date */}
                                                 <motion.div
                                                     layout
-                                                    className="w-24 max-lg:w-20 max-md:w-16 shrink-0"
+                                                    className="w-24 max-lg:w-20 max-md:w-full shrink-0"
                                                 >
                                                     <span className="text-xs max-lg:text-[11px] max-md:text-[10px] text-nowrap uppercase tracking-[0.25em] max-md:tracking-[0.15em]">
                                                         {concert.date
                                                             ? new Date(
                                                                 concert.date + "T00:00:00"
-                                                            ).toLocaleDateString("en-US", {
-                                                                day: "numeric",
-                                                                month: "long",
-                                                            })
+                                                                ).toLocaleDateString("en-US", {
+                                                                    day: "numeric",
+                                                                    month: "long",
+                                                                })
                                                             : "Date TBA"}
                                                     </span>
                                                 </motion.div>
@@ -115,7 +115,7 @@ const HomeTour = () => {
                                                 {/* Name + City & Venue */}
                                                 <motion.div
                                                     layout
-                                                    className="flex-1 min-w-0 px-8 max-lg:px-4 max-md:px-3 text-left"
+                                                    className="flex-1 min-w-0 px-8 max-lg:px-0 text-left w-full"
                                                 >
                                                     <p className="text-lg max-lg:text-base max-md:text-sm uppercase font-medium truncate">
                                                         {concert.name || "Concert name TBA"}
@@ -146,12 +146,19 @@ const HomeTour = () => {
                                                         duration: 0.4,
                                                         ease: [0.22, 1, 0.36, 1],
                                                     }}
-                                                    className="overflow-hidden shrink-0 text-right"
+                                                    className="overflow-hidden shrink-0 text-right max-md:hidden"
                                                 >
-                                                    <span className="whitespace-nowrap uppercase text-xs max-lg:text-[10px] tracking-[0.3em] max-md:tracking-[0.15em] font-medium">
+                                                    <span className="whitespace-nowrap uppercase text-xs max-lg:text-[10px] tracking-[0.3em] font-medium">
                                                         Get Tickets →
                                                     </span>
                                                 </motion.div>
+
+                                                {/* Mobile Get Tickets (Always visible, no hover needed on touch devices) */}
+                                                <div className="hidden max-md:flex w-full justify-between items-center">
+                                                    <span className="whitespace-nowrap uppercase text-[10px] tracking-[0.15em] font-medium">
+                                                        Get Tickets →
+                                                    </span>
+                                                </div>
                                             </motion.div>
                                         </motion.a>
                                     ))}
@@ -183,7 +190,7 @@ const HomeTour = () => {
                                 >
                                     {/* Default State */}
                                     <div className="group-hover:hidden w-full text-center px-6">
-                                        <span className="uppercase text-sm max-md:text-xs font-medium">
+                                        <span className="uppercase text-xs max-md:text-[11px] font-medium tracking-wider">
                                             See full tour dates
                                         </span>
                                     </div>
@@ -202,7 +209,7 @@ const HomeTour = () => {
                                             {Array.from({ length: 8 }).map((_, i) => (
                                                 <span
                                                     key={i}
-                                                    className="uppercase text-sm max-md:text-xs font-bold flex items-center gap-12"
+                                                    className="uppercase text-xs max-md:text-[11px] font-bold flex items-center gap-12"
                                                 >
                                                     <span>See full tour dates</span>
                                                     <span className="text-xs">✦</span>
@@ -213,7 +220,7 @@ const HomeTour = () => {
                                 </motion.a>
                             </>
                         ) : (
-                            <div className="py-12 text-primary text-center my-auto">
+                            <div className="md:py-12 text-primary text-center my-auto">
                                 <p className="text-lg max-md:text-base">
                                     No upcoming concerts
                                 </p>

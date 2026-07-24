@@ -10,7 +10,7 @@ const PublicLayout = () => {
 
     return (
         <>
-        <div className="cursor-none">
+        <div className="md:cursor-none">
             <CustomCursor />
             <div className="min-h-screen bg-secondary font-unison overflow-hidden">
                 

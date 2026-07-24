@@ -99,6 +99,7 @@ const CustomCursor = () => {
                     fixed
                     top-0
                     left-0
+                    max-md:hidden
                     w-[10px]
                     h-[10px]
                     bg-primary
@@ -144,6 +145,7 @@ const CustomCursor = () => {
                     fixed
                     top-0
                     left-0
+                    max-md:hidden
                     w-[48px]
                     h-[48px]
                     border
