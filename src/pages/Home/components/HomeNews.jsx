@@ -151,7 +151,7 @@ const HomeNews = () => {
                       <img
                         src={imageUrl}
                         alt={article.title?.replace(/<[^>]*>?/gm, '') || "News image"}
-                        className="w-full h-full object-cover object-center grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-out"
+                        className="w-full h-full object-cover object-center grayscale-[50%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-out"
                       />
                     ) : (
                       <div className="w-full h-full bg-white/5 flex items-center justify-center">
@@ -159,8 +159,11 @@ const HomeNews = () => {
                       </div>
                     )}
                     
-                    <div className="absolute inset-0 bg-secondary/75 group-hover:bg-secondary/30 transition-all duration-500" />
+                    <div className="absolute inset-0 bg-secondary/40 group-hover:bg-secondary/30 transition-all duration-500" />
                   </div>
+
+                  {/* Top-to-Bottom Gradient Overlay: Couvre 65% de la carte jusqu'en bas */}
+                  <div className="absolute inset-x-0 bottom-0 h-[65%] z-5 bg-gradient-to-t from-secondary via-secondary/90 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500 pointer-events-none" />
 
                   {/* Card Index & Date */}
                   <div className="relative z-10 p-6 flex justify-between items-start font-mono text-[11px] tracking-widest text-white/50">
@@ -177,10 +180,7 @@ const HomeNews = () => {
                   </div>
 
                   {/* Card Bottom Content */}
-                  <div className="relative z-10 p-6 pt-12 space-y-2">
-                    {/* Bottom gradient fade for enhanced contrast */}
-                    <div className="absolute inset-0 -z-10 bg-linear-to-t from-secondary via-secondary/80 to-transparent opacity-60 group-hover:opacity-95 transition-opacity duration-500 pointer-events-none" />
-
+                  <div className="relative z-10 p-6 space-y-2">
                     {article.subtitle && (
                       <div
                         className="text-xs uppercase tracking-[0.15em] text-primary font-medium block line-clamp-1 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400 ease-out [&>*]:inline [&>*]:m-0"
