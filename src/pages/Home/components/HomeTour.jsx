@@ -29,7 +29,7 @@ const HomeTour = () => {
             }catch
             {
                 // notif à faire
-                toast.error("Impossible de charger les clients")
+                toast.error("Unabled to load concerts");
                 //console.error(error.response)
             }
         }

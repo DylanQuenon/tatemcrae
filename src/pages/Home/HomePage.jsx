@@ -4,6 +4,8 @@ import HomeMarquee from './components/HomeMarquee';
 import HomeTour from './components/HomeTour';
 import HomeAlbums from './components/HomeAlbums';
 import cardTest from '../../assets/images/cardtest.jpg'
+import HomeNews from './components/HomeNews';
+import HomeGallery from './components/HomeGallery';
 
 
 const HomePage = () => {
@@ -22,7 +24,7 @@ const HomePage = () => {
       {/* Tour Section */}
       <HomeTour/>
       <div 
-        className="w-full h-[300px] max-md:h-[150px] bg-cover border-b-1 border-t-1 border-primary/30" 
+        className="w-full h-75 max-md:h-37.5 bg-cover border-b border-t border-primary/30" 
         style={{ backgroundImage: `url(${cardTest})`, backgroundPosition: "center 80%" }}
       >
          <h2 className="max-w-7xl mx-auto py-24 text-6xl max-lg:text-4xl max-md:text-3xl font-medium uppercase italic leading-none bg-tertiary bg-clip-text text-transparent max-md:px-4">
@@ -31,6 +33,9 @@ const HomePage = () => {
       </div>
       {/* Albums Section */}
       <HomeAlbums/>
+      {/*News Section*/}
+      <HomeNews/>
+      <HomeGallery/>
       
     </>
   )

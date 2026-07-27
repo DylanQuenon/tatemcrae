@@ -10,6 +10,7 @@ import TableLoader from "../../../components/loaders/TableLoader";
 const AdminNewsPage = () => {
     const [news, setNews] = useState([]);
     const [search, setSearch] = useState("");
+    const [sortOrder, setSortOrder] = useState("desc"); // 'desc' par défaut pour les plus récents en premier
     const [currentPage, setCurrentPage] = useState(1);
     const [newToDelete, setNewToDelete] = useState(null);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -33,21 +34,36 @@ const AdminNewsPage = () => {
         fetchNews();
     }, []);
 
-    // Search Input
+    // Search Input Handler
     const handleSearch = (event) => {
         setSearch(event.currentTarget.value);
     };
 
-    // Filter News
+    // Sort Handler
+    const handleSortChange = (event) => {
+        setSortOrder(event.target.value);
+    };
+
+    // Filter & Sort News
     const filteredNews = useMemo(() => {
         if (!Array.isArray(news)) return [];
         const term = search.toLowerCase();
-        return news.filter((article) =>
+
+        // 1. Filtrage par terme de recherche
+        const filtered = news.filter((article) =>
             article.title?.toLowerCase().includes(term) ||
             article.subtitle?.toLowerCase().includes(term) ||
             article.content?.toLowerCase().includes(term)
         );
-    }, [news, search]);
+
+        // 2. Tri par date (PublishedAt ou createdAt)
+        return filtered.sort((a, b) => {
+            const dateA = new Date(a.publishedAt || a.createdAt || 0).getTime();
+            const dateB = new Date(b.publishedAt || b.createdAt || 0).getTime();
+
+            return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+        });
+    }, [news, search, sortOrder]);
     
     const maxPage = Math.ceil(filteredNews.length / itemsPerPage) || 1;
     useEffect(() => {
@@ -109,14 +125,32 @@ const AdminNewsPage = () => {
                     </Link>
                 </div>
 
-                <div className="mb-8 relative max-w-md">
-                    <input 
-                        type="text"
-                        placeholder="SEARCH NEWS..."
-                        value={search}
-                        onChange={handleSearch}
-                        className="w-full px-4 py-3 bg-transparent border border-white/15 text-white placeholder:text-white/30 text-xs outline-none transition-colors duration-300 focus:border-primary"
-                    />
+                {/* Barre de recherche et Filtre de tri */}
+                <div className="mb-8 flex flex-col sm:flex-row gap-4 items-stretch sm:items-center justify-between">
+                    <div className="relative max-w-md w-full">
+                        <input 
+                            type="text"
+                            placeholder="SEARCH NEWS..."
+                            value={search}
+                            onChange={handleSearch}
+                            className="w-full px-4 py-3 bg-transparent border border-white/15 text-white placeholder:text-white/30 text-xs outline-none transition-colors duration-300 focus:border-primary"
+                        />
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <label htmlFor="sortOrder" className="text-xs uppercase tracking-wider text-white/50 whitespace-nowrap">
+                            Sort by:
+                        </label>
+                        <select
+                            id="sortOrder"
+                            value={sortOrder}
+                            onChange={handleSortChange}
+                            className="px-4 py-3 bg-secondary border border-white/15 text-white text-xs outline-none cursor-pointer transition-colors duration-300 focus:border-primary"
+                        >
+                            <option value="desc" className="bg-secondary text-white">Date (Newest first)</option>
+                            <option value="asc" className="bg-secondary text-white">Date (Oldest first)</option>
+                        </select>
+                    </div>
                 </div>
 
                 {!loading ? (
@@ -192,7 +226,7 @@ const AdminNewsPage = () => {
                                             {/* PUBLISHED DATE */}
                                             <td className="px-4 py-3 whitespace-nowrap">
                                                 <span className="uppercase text-[11px] tracking-wider text-white/60">
-                                                    {formatDate(article.publishedAt)}
+                                                    {formatDate(article.publishedAt || article.createdAt)}
                                                 </span>
                                             </td>
     

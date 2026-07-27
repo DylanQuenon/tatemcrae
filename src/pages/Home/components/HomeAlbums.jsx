@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AlbumsAPI from "../../../services/AlbumsAPI";
 import { SERVER_URL } from "../../../config";
+import { ArrowUpRight } from "lucide-react";
 
 const HomeAlbums = () => {
   const [albums, setAlbums] = useState([]);
@@ -25,7 +26,7 @@ const HomeAlbums = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-secondary text-primary">
+    <div className="w-full min-h-fit bg-secondary text-primary">
       <div className="w-full flex flex-col">
         {albums.map((album, index) => {
           const isActive = activeId === album.id;
@@ -115,9 +116,10 @@ const HomeAlbums = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="px-5 py-1.5 border border-primary rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-primary hover:text-secondary transition-colors"
+                      className="px-4 py-2 border border-primary rounded-full text-xs duration-300 flex items-center gap-1 uppercase tracking-wider hover:bg-primary hover:text-secondary transition-all"
                     >
-                      STREAM NOW ↗
+                      STREAM NOW 
+                      <ArrowUpRight/>
                     </a>
                   )}
                 </div>
