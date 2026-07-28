@@ -25,7 +25,7 @@ function find(id){
     .then(response => response.data);
 }
 function findBySlug(slug) {
-  return Axios.get(`${NEWS_API}/${slug}`).then((response) => response.data);
+  return Axios.get(`${NEWS_API}/s/${slug}`).then((response) => response.data);
 }
 
 function deleteNews(id){

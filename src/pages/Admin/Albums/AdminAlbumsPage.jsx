@@ -18,6 +18,7 @@ const AdminAlbumsPage = () => {
 
     const itemsPerPage = 10;
 
+    
     const fetchAlbums = async () => {
         let isMounted = true;
         try {
@@ -34,7 +35,6 @@ const AdminAlbumsPage = () => {
         }
         return () => { isMounted = false; };
     };
-
     useEffect(() => {
         fetchAlbums();
     }, []);

@@ -23,6 +23,7 @@ import AdminNewsPage from './pages/Admin/News/AdminNewsPage'
 import AdminNewPage from './pages/Admin/News/AdminNewPage'
 import AdminGalleriesPage from './pages/Admin/Galleries/AdminGalleriesPage'
 import AdminGalleryPage from './pages/Admin/Galleries/AdminGalleryPage'
+import NewsDetailPage from './pages/News/NewsDetailPage'
 
 
 const router = createBrowserRouter([
@@ -42,7 +43,10 @@ const router = createBrowserRouter([
           {
             path: "/news",
             element: <NewsPage /> ,
-            
+          },
+          {
+            path: "/news/:slug",
+            element: <NewsDetailPage /> ,
           }
         ]
       },
