@@ -167,33 +167,26 @@ export default function AdminDashboard() {
                         <div>
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-lg font-semibold text-white tracking-wide">
-                                    Quick Actions
+                                    Newsletter Management
                                 </h2>
                                 <span className="rounded-full border border-blue-400/30 bg-blue-800/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-blue-200">
                                     Ready
                                 </span>
                             </div>
                             <p className="text-sm text-blue-100/70">
-                                Jump straight into managing your gallery items, releases, or creating new updates.
+                                Jump straight into managing your subscribers and sending out newsletter updates.
                             </p>
                         </div>
 
                         <div className="flex flex-col gap-3">
                             <Link 
-                                to="/admin/galleries"
+                                to="/admin/newsletter"
                                 className="w-full text-center px-6 py-3 border border-primary bg-primary text-secondary text-xs uppercase tracking-[0.2em] font-medium transition-all hover:bg-transparent hover:text-white"
                             >
-                                Manage Galleries
-                            </Link>
-                            <Link 
-                                to="/admin/galleries/new"
-                                className="w-full text-center px-6 py-3 border border-white/20 text-white text-xs uppercase tracking-[0.2em] font-medium transition-all hover:border-white hover:bg-white/10"
-                            >
-                                Add New Gallery Item
+                                Newsletter
                             </Link>
                         </div>
                     </div>
-
                 </div>
 
             </div>

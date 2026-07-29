@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar/Navbar";
 import CustomCursor from "../components/CustomCursor";
 import InitialLoader from "../components/loaders/InitialLoader";
+import Footer from "../components/footer/Footer";
 
 
 const PublicLayout = () => {
@@ -71,6 +72,7 @@ const PublicLayout = () => {
               )}
             </AnimatePresence>
           </main>
+          <Footer/>
         </div>
       </div>
     </>

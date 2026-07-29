@@ -8,6 +8,7 @@ import HomeNews from './components/HomeNews';
 import HomeGallery from './components/HomeGallery';
 
 
+
 const HomePage = () => {
   useEffect(() => {
     document.title = "Tate McRae | Home";

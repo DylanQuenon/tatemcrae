@@ -26,6 +26,8 @@ import AdminGalleryPage from './pages/Admin/Galleries/AdminGalleryPage'
 import NewsDetailPage from './pages/News/NewsDetailPage'
 import NotFoundPage from './pages/NotFoundPage'
 import GalleryPage from './pages/Gallery/GalleryPage'
+import AdminSubscribersPage from './pages/Admin/Subscribers/AdminSubscribersPage'
+import AdminNewsletterEditor from './pages/Admin/Newsletter/AdminNewsletterEditor'
 
 
 const router = createBrowserRouter([
@@ -85,7 +87,9 @@ const router = createBrowserRouter([
               { path: "/admin/news/", element: <AdminNewsPage /> },
               { path: "/admin/news/:id", element: <AdminNewPage /> },
               { path: "/admin/galleries", element: <AdminGalleriesPage /> },
-              { path: "/admin/galleries/:id", element: <AdminGalleryPage /> }
+              { path: "/admin/galleries/:id", element: <AdminGalleryPage /> },
+              {path: "/admin/subscribers", element: <AdminSubscribersPage />},
+              {path:"/admin/newsletter/", element: <AdminNewsletterEditor />}
             ]
           }
         ]
