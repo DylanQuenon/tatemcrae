@@ -46,7 +46,7 @@ const NewsDetailPage = () => {
 
   useEffect(() => {
     document.title = article?.title
-      ? `TATE MCRAE | ${article.title.toUpperCase()}`
+      ? `Tate McRae | ${article.title}`
       : "TATE MCRAE | NEWS";
   }, [article]);
 

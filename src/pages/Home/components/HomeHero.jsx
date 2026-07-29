@@ -1,26 +1,50 @@
+import { useEffect, useState, Fragment } from 'react'
 import { Headphones, MoveRight } from 'lucide-react'
 import heroBackground from '../../../assets/images/backgrounds/hero-background.webp'
-import { Fragment } from 'react'
 import cardTest from '../../../assets/images/cardtest.jpg'
 import test1 from '../../../assets/images/test1.jpg'
 import test2 from '../../../assets/images/test2.png'
 import test3 from '../../../assets/images/test3.jpg'
 import test4 from '../../../assets/images/test4.webp'
+import AlbumsAPI from '../../../services/AlbumsAPI'
+
+// Importe ton service d'API d'albums
+
 
 const HomeHero = () => {
+  const [latestAlbum, setLatestAlbum] = useState(null);
+
   const listeners = [test1, test2, test3, test4];
   const platforms = ["Spotify", "Youtube", "SoundCloud"];
+
+  useEffect(() => {
+    const fetchLatestAlbum = async () => {
+      try {
+        const albums = await AlbumsAPI.findAll();
+        if (albums && albums.length > 0) {
+          const sorted = [...albums].sort((a, b) => new Date(b.releasedAt) - new Date(a.releasedAt));
+          setLatestAlbum(sorted[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching latest album:", error);
+      }
+    };
+
+    fetchLatestAlbum();
+  }, []);
+
   // platform row
   const platformRow = (
-  <div className="md:w-[80%] flex items-center text-primary/20 text-xs justify-between">
-    {platforms.map((platform) => (
-      <Fragment key={platform}>
-        <MoveRight />
-        <p>{platform}</p>
-      </Fragment>
-    ))}
-  </div>
-);
+    <div className="md:w-[80%] flex items-center text-primary/20 text-xs justify-between">
+      {platforms.map((platform) => (
+        <Fragment key={platform}>
+          <MoveRight />
+          <p>{platform}</p>
+        </Fragment>
+      ))}
+    </div>
+  );
+
   return (
     <>
       <div 
@@ -28,7 +52,7 @@ const HomeHero = () => {
         style={{ backgroundImage: `url(${heroBackground})` }}
       >
 
-        <div className="absolute inset-0 bg-linear-to-t from-secondary via-secondary  to-transparent md:hidden pointer-events-none" />
+        <div className="absolute inset-0 bg-linear-to-t from-secondary via-secondary to-transparent md:hidden pointer-events-none" />
 
         {/* horizontal line */}
         <div className="max-md:hidden absolute top-12 left-0 w-full h-px bg-linear-to-r from-white/20 to-transparent" />
@@ -47,7 +71,9 @@ const HomeHero = () => {
             {/* Jumbotron Title & Text*/}
             <div className="flex flex-col gap-5">
               <div className="flex flex-col gap-5">
-                <h6 className="max-md:text-lg text-2xl text-primary"> SO CLOSE TO WHAT ???</h6> {/* /!\ LAST ALBUM */}
+                <h6 className="max-md:text-lg text-2xl text-primary">
+                  {latestAlbum?.title ? latestAlbum.title.toUpperCase() : "SO CLOSE TO WHAT"}
+                </h6>
                 <h1 className="max-md:text-4xl text-6xl font-bold text-primary">
                   TATE MCRAE
                 </h1>
@@ -63,7 +89,7 @@ const HomeHero = () => {
               {platformRow}
               {/*monthly listeners & random image */}
               <div className="flex flex-wrap relative gap-5 items-stretch text-primary">
-                {/*Monthly Listeners (Integrate via API later?)*/}
+                {/*Monthly Listeners*/}
                 <div className="p-7 border border-primary rounded-3xl bg-[#121928] w-full md:max-w-sm flex flex-col gap-5">
                   <div className="flex gap-3 items-center text-primary/80 text-sm">
                     <Headphones />
@@ -75,7 +101,7 @@ const HomeHero = () => {
                         {listeners.map((item, index) => (
                             <div
                                 key={item}
-                                className={` flex h-12 bg-cover bg-center w-12 items-center justify-center rounded-full border border-primary bg-secondary`}
+                                className={`flex h-12 bg-cover bg-center w-12 items-center justify-center rounded-full border border-primary bg-secondary`}
                                 style={{
                                     zIndex: listeners.length - index,
                                     backgroundImage: `url(${item})`
@@ -83,11 +109,9 @@ const HomeHero = () => {
                             />
                         ))}
                     </div>
-                    
                   </div>
-                  
                 </div>
-                {/* /!\ Random Image from the gallery*/}
+                {/* Random Image from the gallery */}
                 <div className="max-md:h-40 w-full md:w-52 self-stretch bg-secondary border border-primary rounded-3xl bg-cover bg-center max-md:bg-bottom" style={{ backgroundImage: `url(${cardTest})` }}></div>
               </div>
               {platformRow}

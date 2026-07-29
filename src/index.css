@@ -36,6 +36,7 @@
 
   /* Fonts */
   --font-unison: "Unison Pro", sans-serif;
+  --yarl__font_family: "Unison Pro", sans-serif !important;
 }
 
 

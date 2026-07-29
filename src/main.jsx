@@ -24,6 +24,8 @@ import AdminNewPage from './pages/Admin/News/AdminNewPage'
 import AdminGalleriesPage from './pages/Admin/Galleries/AdminGalleriesPage'
 import AdminGalleryPage from './pages/Admin/Galleries/AdminGalleryPage'
 import NewsDetailPage from './pages/News/NewsDetailPage'
+import NotFoundPage from './pages/NotFoundPage'
+import GalleryPage from './pages/Gallery/GalleryPage'
 
 
 const router = createBrowserRouter([
@@ -47,6 +49,14 @@ const router = createBrowserRouter([
           {
             path: "/news/:slug",
             element: <NewsDetailPage /> ,
+          },
+          {
+            path: "/gallery/",
+            element: <GalleryPage /> ,
+          },
+          {
+            path: "*", 
+            element: <NotFoundPage />
           }
         ]
       },
