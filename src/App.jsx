@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'
 
 authAPI.setup()
 function App() {
+
     const [isAuthenticated, setIsAuthenticated] = useState(authAPI.isAuthenticated())
 
   // on donne les infos à la forme de notre contexte

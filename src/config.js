@@ -12,3 +12,4 @@ export const NEWS_API = API_URL + "news";
 export const GALLERIES_API = API_URL + "galleries";
 export const SUBSCRIBERS_API = API_URL + "newsletter_subscribers";
 export const NEWSLETTER_API = API_URL + "newsletters";
+export const CHANGE_PASSWORD_API = API_URL + "me/change-password";

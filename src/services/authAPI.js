@@ -1,6 +1,6 @@
 import Axios from 'axios'
 
-import { LOGIN_API } from '../config'
+import { CHANGE_PASSWORD_API, LOGIN_API } from '../config'
 import { jwtDecode } from 'jwt-decode'
 
 function authenticate(credentials)
@@ -48,11 +48,15 @@ function isAuthenticated() {
     }
     return false // pas de token
 }
+function changePassword(passwords) {
+    return Axios.post(CHANGE_PASSWORD_API, passwords);
+}
 
 
 export default {
     authenticate: authenticate,
     logout: logout,
     setup: setup,
-    isAuthenticated: isAuthenticated
+    isAuthenticated: isAuthenticated,
+    changePassword: changePassword
 }

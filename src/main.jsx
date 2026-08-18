@@ -28,12 +28,16 @@ import NotFoundPage from './pages/NotFoundPage'
 import GalleryPage from './pages/Gallery/GalleryPage'
 import AdminSubscribersPage from './pages/Admin/Subscribers/AdminSubscribersPage'
 import AdminNewsletterEditor from './pages/Admin/Newsletter/AdminNewsletterEditor'
+import ForbiddenPage from './pages/ForbiddenPage'
+import ServerErrorPage from './ServerErrorPage'
+import ChangePasswordPage from './pages/Admin/Profile/ChangePasswordPage'
 
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <ServerErrorPage />,
     children: [
       
       // 1. PUBLIC ROUTES
@@ -56,6 +60,8 @@ const router = createBrowserRouter([
             path: "/gallery/",
             element: <GalleryPage /> ,
           },
+          { path: "/403", element: <ForbiddenPage /> },
+          { path:"/500", element: <ServerErrorPage /> },
           {
             path: "*", 
             element: <NotFoundPage />
@@ -89,7 +95,8 @@ const router = createBrowserRouter([
               { path: "/admin/galleries", element: <AdminGalleriesPage /> },
               { path: "/admin/galleries/:id", element: <AdminGalleryPage /> },
               {path: "/admin/subscribers", element: <AdminSubscribersPage />},
-              {path:"/admin/newsletter/", element: <AdminNewsletterEditor />}
+              {path:"/admin/newsletter/", element: <AdminNewsletterEditor />},
+              {path:"/admin/change-password", element: <ChangePasswordPage />}
             ]
           }
         ]
